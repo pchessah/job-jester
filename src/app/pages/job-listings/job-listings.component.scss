@@ -1,0 +1,27 @@
+.page-container {
+  height: 100vh;
+  width: 100vw;
+  background-image: url('../../../assets/bg.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.img-container{
+  width: 100%;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.img-container svg {
+
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 10px;
+
+}
+
+.listings-section{
+  padding: 10px 5% 0 5%;
+  max-height: 40%;;
+}
