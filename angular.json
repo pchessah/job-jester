@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "job-jester:build:production"
+              "buildTarget": "job-jester:build:production"
             },
             "development": {
-              "browserTarget": "job-jester:build:development"
+              "buildTarget": "job-jester:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "job-jester:build"
+            "buildTarget": "job-jester:build"
           }
         },
         "test": {
