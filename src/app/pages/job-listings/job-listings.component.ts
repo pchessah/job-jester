@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SearchHeaderComponent } from 'src/app/components/search-header/search-header.component';
 import { FilterBarComponent } from 'src/app/components/filter-bar/filter-bar.component';
 import { JobListingCardComponent } from 'src/app/components/job-listing-card/job-listing-card.component';
+import { JobsService } from 'src/app/services/jobs.service';
 
 @Component({
   selector: 'app-job-listings',
@@ -12,5 +13,8 @@ import { JobListingCardComponent } from 'src/app/components/job-listing-card/job
   styleUrl: './job-listings.component.scss'
 })
 export class JobListingsComponent {
+
+  jobService: JobsService = inject(JobsService);
+
 
 }

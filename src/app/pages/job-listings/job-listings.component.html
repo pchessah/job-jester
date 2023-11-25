@@ -1,3 +1,4 @@
+@defer (when true) {
 <div class="page-container">
   <div class="img-container d-flex flex-column align-content-center justify-content-center">
 
@@ -98,14 +99,17 @@
     <app-search-header></app-search-header>
     <app-filter-bar></app-filter-bar>
   </div>
+  
   <div class="listings-section d-flex flex-column align-content-center">
-    <app-job-listing-card></app-job-listing-card>
-    <app-job-listing-card></app-job-listing-card>
-    <app-job-listing-card></app-job-listing-card>
-    <app-job-listing-card></app-job-listing-card>
-
+    @for (job of jobService.jobsToBeDisplayed(); track job.id) {
+      <app-job-listing-card [job]="job"></app-job-listing-card>
+    } @empty {
+      Empty list of jobs
+    }
   </div>
   <div class="pagination-customer">
 
+
   </div>
 </div>
+}
