@@ -1,36 +1,69 @@
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { Injectable, Signal, WritableSignal, computed, inject, signal } from '@angular/core';
 import { DataStore } from '../data/data.store';
 import { Job } from '../interfaces/job.interface';
 import { lastValueFrom } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class JobsService {
 
-  private readonly  _dataStore: DataStore = inject(DataStore);
+  private readonly _dataStore: DataStore = inject(DataStore);
 
   jobsToBeDisplayed!: WritableSignal<Job[]>;
-  allJobs:Job[] = [];
+  defaultFilter:Job = {title: "",
+                       description: "", 
+                       location: "",
+                       jobType: "all",
+                       datePosted: "",
+                       id: "" as any,
+                       company: ""}
+  currentFilter:WritableSignal<Job> = signal(this.defaultFilter);
 
-  constructor(){
+  allJobs: Job[] = [];
+
+
+  jobTitles: Signal<string[]> = computed(() => {
+    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.title))
+      : []
+  })
+
+  companyNames: Signal<string[]> = computed(() => {
+    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.company))
+      : []
+  })
+
+  jobTypes: Signal<string[]> = computed(() => {
+
+    return this.jobsToBeDisplayed().length ?  this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.jobType))
+      : []
+  })
+
+  jobLocations: Signal<string[]> = computed(() => {
+    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.location))
+    : []
+  })
+
+  constructor() {
     this.setJobsDisplayed()
   }
 
-  updateJobsToBeDisplayed(){
-     return this.jobsToBeDisplayed.update((val) => val.filter(res => res.id === 1))
+
+  private _makeArrayUnique<T> (array: T[])  {
+    return [...new Set(array)]
   }
+
 
   async setJobsDisplayed() {
     this.jobsToBeDisplayed = signal(await lastValueFrom(this._dataStore.data$))
     this.allJobs = this.jobsToBeDisplayed()
   }
 
-  reset(){
+  reset() {
     this.jobsToBeDisplayed.set(this.allJobs)
   }
 
-  doSearch(filterString: string){
+  doSearch(filterString: string) {
 
-    if(!filterString.length){
+    if (!filterString.length) {
       this.reset()
       return;
     }
@@ -45,7 +78,7 @@ export class JobsService {
       const lowerDescription = job.description.toLowerCase();
       const lowerDatePosted = job.datePosted.toLowerCase();
       const lowerJobType = job.jobType.toLowerCase();
-  
+
       // Check if any of the properties contain the filter string
       return (
         lowerTitle.includes(lowerFilter) ||
@@ -58,8 +91,47 @@ export class JobsService {
     });
 
     this.jobsToBeDisplayed.set(filteredJobs)
+  }
+
+  filterBy(keyword:string, filter: 'Title' | 'Location' | 'Company' | 'Job Type' ){
+
+    let currentJobsDisplayed = this.jobsToBeDisplayed()
+    
+    if (filter === 'Title') {
+      this.currentFilter.set({...this.currentFilter(), title: keyword});
+    } else if (filter === 'Location') {
+      this.currentFilter.set({...this.currentFilter(), location: keyword});
+    } else if (filter === 'Company') {
+      this.currentFilter.set({...this.currentFilter(), company: keyword});
+    } else if (filter === 'Job Type') {
+      this.currentFilter.set({...this.currentFilter(), jobType: keyword as any});
+    } else {
+      this.currentFilter.set(this.defaultFilter)
+    }
+
+    if(this.currentFilter().title.length){
+      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.title.includes(keyword))
+    }
+
+    if(this.currentFilter().location.length){
+      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.location.includes(keyword))
+    }
+
+    if(this.currentFilter().company.length){
+      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.company.includes(keyword))
+    }
+
+    if(this.currentFilter().jobType !== 'all'){
+      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.jobType.includes(keyword))
+    }
+
+    this.jobsToBeDisplayed.set(currentJobsDisplayed)
+ 
+
 
   }
 
 
-}
+  }
+
+
