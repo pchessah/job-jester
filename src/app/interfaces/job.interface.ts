@@ -5,5 +5,5 @@ export interface Job {
   location: string;
   description: string;
   datePosted: string;
-  jobType: 'full-time' | 'part-time' | 'remote';
+  jobType: 'full-time' | 'part-time' | 'remote' | 'all';
 }
