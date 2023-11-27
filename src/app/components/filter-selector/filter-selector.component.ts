@@ -12,15 +12,23 @@ import { JobsService } from 'src/app/services/jobs.service';
 })
 export class FilterSelectorComponent {
   jobsService: JobsService = inject(JobsService);
+  hasFilter: boolean = false;
   @Input({required: true}) options:string[] = [];
   @Input({required: true}) selector: 'Title' | 'Location' | 'Company' | 'Job Type' = 'Job Type';
 
   onChange(event:any){
-    this.jobsService.filterBy(event.target.value, this.selector)
+    if(event.target.value === this.selector){
+      this.resetFilter();
+      this.hasFilter = false
+    } else {
+      this.jobsService.filterBy(event.target.value, this.selector)
+      this.hasFilter = true;
+
+    }
   }
 
   resetFilter(){
-    this.jobsService.filterBy("", this.selector)
+    this.jobsService.resetFilterType(this.selector)
   }
 
 }

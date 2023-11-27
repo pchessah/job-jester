@@ -1,5 +1,5 @@
 <select (change)="onChange($event)" class="form-select mb-2" aria-label="Default select example">
-  <option (click)="resetFilter()">{{selector}}</option>
+  <option [value]="selector">{{hasFilter ? 'Reset Filter' : selector}}</option>
   @for(option of options; track option){
     <option [value]="option">{{option}}</option>
   }

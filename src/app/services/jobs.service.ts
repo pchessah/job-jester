@@ -9,14 +9,16 @@ export class JobsService {
   private readonly _dataStore: DataStore = inject(DataStore);
 
   jobsToBeDisplayed!: WritableSignal<Job[]>;
-  defaultFilter:Job = {title: "",
-                       description: "", 
-                       location: "",
-                       jobType: "all",
-                       datePosted: "",
-                       id: "" as any,
-                       company: ""}
-  currentFilter:WritableSignal<Job> = signal(this.defaultFilter);
+  defaultFilter: Job = {
+    title: "",
+    description: "",
+    location: "",
+    jobType: "all",
+    datePosted: "",
+    id: "" as any,
+    company: ""
+  }
+  currentFilter: WritableSignal<Job> = signal(this.defaultFilter);
 
   allJobs: Job[] = [];
 
@@ -33,13 +35,13 @@ export class JobsService {
 
   jobTypes: Signal<string[]> = computed(() => {
 
-    return this.jobsToBeDisplayed().length ?  this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.jobType))
+    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.jobType))
       : []
   })
 
   jobLocations: Signal<string[]> = computed(() => {
     return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.location))
-    : []
+      : []
   })
 
   constructor() {
@@ -47,7 +49,7 @@ export class JobsService {
   }
 
 
-  private _makeArrayUnique<T> (array: T[])  {
+  private _makeArrayUnique<T>(array: T[]) {
     return [...new Set(array)]
   }
 
@@ -93,45 +95,61 @@ export class JobsService {
     this.jobsToBeDisplayed.set(filteredJobs)
   }
 
-  filterBy(keyword:string, filter: 'Title' | 'Location' | 'Company' | 'Job Type' ){
+  filterBy(keyword: string, filter: 'Title' | 'Location' | 'Company' | 'Job Type') {
 
-    let currentJobsDisplayed = this.jobsToBeDisplayed()
-    
     if (filter === 'Title') {
-      this.currentFilter.set({...this.currentFilter(), title: keyword});
+      this.currentFilter.set({ ...this.currentFilter(), title: keyword });
+      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.title.includes(keyword)))
     } else if (filter === 'Location') {
-      this.currentFilter.set({...this.currentFilter(), location: keyword});
+      this.currentFilter.set({ ...this.currentFilter(), location: keyword });
+      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.location.includes(keyword)))
     } else if (filter === 'Company') {
-      this.currentFilter.set({...this.currentFilter(), company: keyword});
+      this.currentFilter.set({ ...this.currentFilter(), company: keyword });
+      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.company.includes(keyword)))
     } else if (filter === 'Job Type') {
-      this.currentFilter.set({...this.currentFilter(), jobType: keyword as any});
+      this.currentFilter.set({ ...this.currentFilter(), jobType: keyword as any });
+      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.jobType.includes(keyword)))
     } else {
       this.currentFilter.set(this.defaultFilter)
     }
+  }
 
-    if(this.currentFilter().title.length){
-      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.title.includes(keyword))
+  resetFilterType(filter: 'Title' | 'Location' | 'Company' | 'Job Type') {
+    
+    if (filter === 'Title') {
+      this.currentFilter.set({ ...this.currentFilter(), title: "" });
+    } else if (filter === 'Location') {
+      this.currentFilter.set({ ...this.currentFilter(), location: "" });
+    } else if (filter === 'Company') {
+      this.currentFilter.set({ ...this.currentFilter(), company: "" });
+    } else if (filter === 'Job Type') {
+      this.currentFilter.set({ ...this.currentFilter(), jobType: "all" });
     }
 
-    if(this.currentFilter().location.length){
-      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.location.includes(keyword))
+    let currentItems = this.allJobs
+
+    if (this.currentFilter().title.length) {
+      currentItems = currentItems.filter(i => i.title === this.currentFilter().title)
     }
 
-    if(this.currentFilter().company.length){
-      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.company.includes(keyword))
+    if (this.currentFilter().location.length) {
+      currentItems = currentItems.filter(i => i.location === this.currentFilter().location)
     }
 
-    if(this.currentFilter().jobType !== 'all'){
-      currentJobsDisplayed = currentJobsDisplayed.filter(j => j.jobType.includes(keyword))
+    if (this.currentFilter().company.length) {
+      currentItems = currentItems.filter(i => i.company === this.currentFilter().company)
     }
 
-    this.jobsToBeDisplayed.set(currentJobsDisplayed)
- 
+    if (this.currentFilter().jobType === 'all') {
+      currentItems = currentItems.filter(i => (i.jobType === 'full-time') || (i.jobType === 'part-time') || (i.jobType === 'remote'))
 
+    }
+
+    this.jobsToBeDisplayed.set(currentItems);
 
   }
 
 
-  }
+}
 
 
