@@ -23,5 +23,21 @@
 
 .listings-section{
   padding: 10px 5% 0 5%;
-  max-height: 40%;;
+  max-height: 60%;
+  overflow-y: auto;
+}
+
+.pagination-customer{
+  padding: 10px 5% 0 5%;
+}
+
+.empty-list img {
+  height: 30%;
+  width: 30%;
+}
+
+.empty-list a {
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
 }

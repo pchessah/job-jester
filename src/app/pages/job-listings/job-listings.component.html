@@ -2,8 +2,8 @@
 <div class="page-container">
   <div class="img-container d-flex flex-column align-content-center justify-content-center">
 
-    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"
-      viewBox="0 0 931 633.23506" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 931 633.23506"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="a2bfc056-849c-4ec6-91e1-f91319e9ec32" data-name="Group 41">
         <rect id="a3c1d3c4-4e90-4475-ab67-d6aa194b0cda" data-name="Rectangle 62" x="120.36301" y="297.37505"
           width="703.57599" height="333.85901" fill="#e6e6e6" />
@@ -92,24 +92,24 @@
           fill="#fff" />
       </g>
     </svg>
-
-    <h4>The Job Jester</h4>
   </div>
   <div class="header-section">
     <app-search-header></app-search-header>
     <app-filter-bar></app-filter-bar>
   </div>
-  
+
   <div class="listings-section d-flex flex-column align-content-center">
     @for (job of jobService.jobsToBeDisplayed(); track job.id) {
-      <app-job-listing-card [job]="job"></app-job-listing-card>
+    <app-job-listing-card [job]="job"></app-job-listing-card>
     } @empty {
-      Empty list of jobs
+    <div class=" p-2 empty-list img-container d-flex flex-column align-content-center justify-content-center">
+      <img src='../../../assets/empty.svg' alt="empty list" />
+      <span>No matching Jobs, <a (click)="jobService.reset()">Reset filters?</a></span>
+    </div>
     }
   </div>
   <div class="pagination-customer">
-
-
+    <app-jobs-paginator></app-jobs-paginator>
   </div>
 </div>
 }
