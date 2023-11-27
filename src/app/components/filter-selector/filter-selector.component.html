@@ -1,6 +1,6 @@
-<select class="form-select mb-2" aria-label="Default select example">
-  <option selected>Open this select menu</option>
-  <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
+<select (change)="onChange($event)" class="form-select mb-2" aria-label="Default select example">
+  <option (click)="resetFilter()">{{selector}}</option>
+  @for(option of options; track option){
+    <option [value]="option">{{option}}</option>
+  }
 </select>

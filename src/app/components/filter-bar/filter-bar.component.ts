@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FilterSelectorComponent } from '../filter-selector/filter-selector.component';
+import { JobsService } from 'src/app/services/jobs.service';
 
 @Component({
   selector: 'app-filter-bar',
@@ -10,5 +11,7 @@ import { FilterSelectorComponent } from '../filter-selector/filter-selector.comp
   styleUrl: './filter-bar.component.scss'
 })
 export class FilterBarComponent {
+
+  jobService: JobsService =  inject(JobsService);
 
 }

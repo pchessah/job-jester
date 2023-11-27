@@ -1,9 +1,6 @@
 <div class="header-container d-flex flex-row justify-content-between flex-wrap">
- <app-filter-selector></app-filter-selector>
- <app-filter-selector></app-filter-selector>
- <app-filter-selector></app-filter-selector>
- <app-filter-selector></app-filter-selector>
-
-
-
+  <app-filter-selector [selector]="'Title'" [options]="jobService.jobTitles()"></app-filter-selector>
+  <app-filter-selector [selector]="'Company'" [options]="jobService.companyNames()"></app-filter-selector>
+  <app-filter-selector [selector]="'Job Type'" [options]="jobService.jobTypes()"></app-filter-selector>
+  <app-filter-selector [selector]="'Location'" [options]="jobService.jobLocations()"></app-filter-selector>
 </div>
