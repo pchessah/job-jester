@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-body{
+
+* {
+  font-family: "Roboto Flex", sans-serif;
+  letter-spacing: 1px;
+}
+
+body {
   margin: 0;
   padding: 0;
   overflow: hidden;
