@@ -108,6 +108,26 @@ export class JobsService {
     this.loadData(this.allJobs)
   }
 
+  sort(direction: 'asc' | 'desc', field: 'Date Posted' | 'Job Type') {
+    const jobsSorted =  this.currentAllJobs().slice().sort((a, b) => {
+      const aValue = field === 'Job Type' ? a.jobType : a.datePosted;
+      const bValue = field === 'Job Type' ? b.jobType : b.datePosted;
+  
+      // Convert datePosted to a comparable format for sorting
+      const dateA = field === 'Date Posted' ? new Date(aValue).getTime() : 0;
+      const dateB = field === 'Date Posted' ? new Date(bValue).getTime() : 0;
+  
+      // Compare values based on the sorting direction
+      if (direction === 'asc') {
+        return dateA ? dateA - dateB  : aValue.localeCompare(bValue);
+      } else {
+        return dateB ? dateB - dateA : bValue.localeCompare(aValue);
+      }
+    });
+
+    this.loadData(jobsSorted)
+  }
+
   doSearch(filterString: string) {
     this.currentPage.set(1)
 
