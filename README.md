@@ -1,27 +1,30 @@
 # JobJester
+The follwoing project was based on the follwoing instructions: 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.9.
+# Angular App Challenge: Job Listing and Filtering
 
-## Development server
+## Task Description:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Build a job listing application using Angular 17 that showcases job listings and allows users to filter and search for jobs based on various criteria. The app should have the following features:
 
-## Code scaffolding
+### Design with Bootstrap:
+- Utilize Bootstrap for responsive design and layout of the application. Ensure it looks visually appealing and user-friendly.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Job Listing Display:
+- Fetch and display job listings from a mock API or static data (such as JSON files).
+- Display job title, company name, location, and a brief description for each job.
 
-## Build
+### Filtering and Sorting:
+- Implement filters for users to refine job searches based on criteria such as job title, location, company name, and job type (full-time, part-time, remote).
+- Allow users to sort job listings based on relevance, date posted, or job type.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### State Management:
+- Implement a state management solution (e.g., NgRx, Angular Services, RxJS BehaviorSubject) to manage the application's state efficiently.
 
-## Running unit tests
+### Services and API Integration:
+- Create services to handle data retrieval from a mock API or static data sources.
+- Mimic API calls using Observables or Promises to simulate fetching job data.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Additional Functionality:
+- Implement pagination for the job listings.
+- Include a search bar for users to search for specific keywords within job listings.
