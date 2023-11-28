@@ -4,11 +4,19 @@ import { Job } from '../interfaces/job.interface';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
+
+/**
+ * @Class JobService Service that manages the state of the jobs being displayed
+ */
 export class JobsService {
 
+  //Mock store for jobs
   private readonly _dataStore: DataStore = inject(DataStore);
 
+  //Signal for the list of jobs being displayed at any particular time
   jobsToBeDisplayed!: WritableSignal<Job[]>;
+
+  //Signal for the list of jobs based on conditions specified such as filtering, searching and pagination
   currentAllJobs!: WritableSignal<Job[]>;
 
   defaultFilter: Job = {
@@ -21,37 +29,45 @@ export class JobsService {
     company: ""
   }
 
+  //Signal to track current filter applied to the view
   currentFilter: WritableSignal<Job> = signal(this.defaultFilter);
-  pages!: WritableSignal<any>
+
+  //Signal to track current page being viewed
   currentPage: WritableSignal<number> = signal(1);
+
+  //Tracks number of jobs per page
   jobsPerPage: WritableSignal<number> = signal(5);
 
+  //Used to keep record of all jobs loaded from the data store
   allJobs: Job[] = [];
 
+  //Used to track all the titles that can be filtered
   jobTitles: Signal<string[]> = computed(() => {
     return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.title))
       : []
   })
-
+  //Used to track all the company names that can be filtered
   companyNames: Signal<string[]> = computed(() => {
     return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.company))
       : []
   })
-
+  //Used to track all the jobtypes that can be filtered
   jobTypes: Signal<string[]> = computed(() => {
     return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.jobType))
       : []
   })
-
+  //Used to track all the locations that can be filtered
   jobLocations: Signal<string[]> = computed(() => {
     return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.location))
       : []
   })
 
+  //Number of pages array based on total currentjobs count
   totalPages:Signal<number[]> = computed(() => {
     return this._generateArrayOfPages(Math.ceil(this.currentAllJobs().length / this.jobsPerPage()))
   })
 
+  //Helper function
   private _generateArrayOfPages(n:number) {
     return Array.from({ length: n }, (_, index) => index + 1);
 }
@@ -60,6 +76,8 @@ export class JobsService {
     this.setJobsDisplayed()
   }
 
+
+  //Loads the current view based on the current page
   loadData(newJobs: Job[]): void {
     const startIndex = (this.currentPage() - 1) * this.jobsPerPage()
     const endIndex = startIndex + this.jobsPerPage()
@@ -137,6 +155,7 @@ export class JobsService {
     }
 
     const currentJobsDisplayed = this.currentAllJobs()
+
     const filteredJobs = currentJobsDisplayed.filter((job) => {
       // Convert all the properties to lowercase for case-insensitive matching
       const lowerFilter = filterString.toLowerCase();
@@ -158,6 +177,7 @@ export class JobsService {
       );
     });
 
+     this.currentAllJobs.set(filteredJobs)
      this.loadData(filteredJobs)
   }
 
