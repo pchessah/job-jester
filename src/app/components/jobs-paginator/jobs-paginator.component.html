@@ -1,17 +1,18 @@
 <nav aria-label="Page navigation example">
   <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
+    <li (click)="jobsService.goToPreviousPage()" class="page-item">
+      <span  class="page-link" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
-      </a>
+      </span>
     </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
+    @for (item of jobsService.totalPages(); track $index) {
+      <li (click)="jobsService.goToPage(item)" class="page-item" [ngClass]="item === jobsService.currentPage() ? 'active' : ''"><span class="page-link">{{item}}</span></li>
+    }
+
+    <li (click)="jobsService.goToNextPage()" class="page-item">
+      <span class="page-link" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
-      </a>
+      </span>
     </li>
   </ul>
 </nav>

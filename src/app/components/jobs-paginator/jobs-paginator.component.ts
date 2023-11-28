@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { JobsService } from 'src/app/services/jobs.service';
 
 @Component({
   selector: 'app-jobs-paginator',
@@ -9,5 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './jobs-paginator.component.scss'
 })
 export class JobsPaginatorComponent {
+
+  jobsService: JobsService = inject(JobsService)
 
 }
