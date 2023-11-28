@@ -1,0 +1,5 @@
+<div class="con d-flex justify-content-between align-items-center">
+  <span class="mr-1 text-muted">{{sortField}}</span>
+  <button type="button" (click)="jobsService.sort('asc', sortField)" class="btn btn-outline-dark  btn-sm"> <i class="bi bi-sort-up"></i></button>
+  <button type="button" (click)="jobsService.sort('desc', sortField)" class="btn btn-outline-dark  btn-sm"> <i class="bi bi-sort-down"></i></button>
+</div>
