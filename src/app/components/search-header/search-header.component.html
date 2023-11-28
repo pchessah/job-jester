@@ -7,14 +7,12 @@
       </svg> Search your dream job</label>
     </div>
     <div class="btn-container">
-      <button (click)="jobService.doSearch(searchString)" type="button" class="btn btn-dark">Search</button>
+      <button (click)="jobService.doSearch(searchString); searchString=''" type="button" class="btn btn-dark">Search</button>
     </div>
 
   </div>
 
   <div class="btn-container reset-btn-container">
-    <button type="button"  (click)="jobService.reset()" class="btn btn-warning">Reset filter/search</button>
+    <button type="button"  (click)="jobService.reset();  searchString=''" class="btn btn-warning">Reset search</button>
   </div>
-
-
 </div>
