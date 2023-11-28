@@ -1,4 +1,4 @@
-# JobJester
+# Job Jester
 The follwoing project was based on the follwoing instructions: 
 
 # Angular App Challenge: Job Listing and Filtering
