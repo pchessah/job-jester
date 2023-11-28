@@ -36,7 +36,7 @@ export class JobsService {
   currentPage: WritableSignal<number> = signal(1);
 
   //Tracks number of jobs per page
-  jobsPerPage: WritableSignal<number> = signal(5);
+  jobsPerPage: WritableSignal<number> = signal(6);
 
   //Used to keep record of all jobs loaded from the data store
   allJobs: Job[] = [];
