@@ -1,5 +1,5 @@
 # Job Jester
-The follwoing project was based on the follwoing instructions: 
+The following project was based on the instructions provided below. To run the app locally you need to clone the repo, Run `npm install` and then run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 # Angular App Challenge: Job Listing and Filtering
 
