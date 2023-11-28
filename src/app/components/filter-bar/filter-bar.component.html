@@ -4,3 +4,8 @@
   <app-filter-selector [selector]="'Job Type'" [options]="jobService.jobTypes()"></app-filter-selector>
   <app-filter-selector [selector]="'Location'" [options]="jobService.jobLocations()"></app-filter-selector>
 </div>
+
+<div  class="header-container d-flex flex-row flex-wrap">
+  <app-sorter [sortField]="'Date Posted'" ></app-sorter>
+  <app-sorter [sortField]="'Job Type'"></app-sorter>
+</div>
