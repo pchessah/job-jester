@@ -9,6 +9,8 @@ export class JobsService {
   private readonly _dataStore: DataStore = inject(DataStore);
 
   jobsToBeDisplayed!: WritableSignal<Job[]>;
+  currentAllJobs!: WritableSignal<Job[]>;
+
   defaultFilter: Job = {
     title: "",
     description: "",
@@ -18,59 +20,103 @@ export class JobsService {
     id: "" as any,
     company: ""
   }
+
   currentFilter: WritableSignal<Job> = signal(this.defaultFilter);
+  pages!: WritableSignal<any>
+  currentPage: WritableSignal<number> = signal(1);
+  jobsPerPage: WritableSignal<number> = signal(5);
 
   allJobs: Job[] = [];
 
-
   jobTitles: Signal<string[]> = computed(() => {
-    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.title))
+    return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.title))
       : []
   })
 
   companyNames: Signal<string[]> = computed(() => {
-    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.company))
+    return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.company))
       : []
   })
 
   jobTypes: Signal<string[]> = computed(() => {
-
-    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.jobType))
+    return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.jobType))
       : []
   })
 
   jobLocations: Signal<string[]> = computed(() => {
-    return this.jobsToBeDisplayed().length ? this._makeArrayUnique(this.jobsToBeDisplayed().map(j => j.location))
+    return this.currentAllJobs().length ? this._makeArrayUnique(this.currentAllJobs().map(j => j.location))
       : []
   })
+
+  totalPages:Signal<number[]> = computed(() => {
+    return this._generateArrayOfPages(Math.ceil(this.currentAllJobs().length / this.jobsPerPage()))
+  })
+
+  private _generateArrayOfPages(n:number) {
+    return Array.from({ length: n }, (_, index) => index + 1);
+}
 
   constructor() {
     this.setJobsDisplayed()
   }
 
+  loadData(newJobs: Job[]): void {
+    const startIndex = (this.currentPage() - 1) * this.jobsPerPage()
+    const endIndex = startIndex + this.jobsPerPage()
+    this.jobsToBeDisplayed.set(newJobs.slice(startIndex, endIndex))
+  }
+
+  goToPage(pageNumber: number) {
+    this.currentPage.set(pageNumber);
+    const startIndex = (this.currentPage() - 1) * this.jobsPerPage()
+    const endIndex = startIndex + this.jobsPerPage()
+    this.jobsToBeDisplayed.set(this.currentAllJobs().slice(startIndex, endIndex))
+  }
+
+  goToPreviousPage(){
+    const currentPage = this.currentPage()
+    const previousPage = currentPage - 1;
+    if(previousPage > 0){
+      this.goToPage(previousPage)
+      return
+    }
+  }
+
+  goToNextPage(){
+    const currentPage = this.currentPage()
+    const totalPages = this.totalPages()[this.totalPages().length -1]
+    const nextPage = currentPage + 1;
+    if(nextPage <= totalPages){
+      this.goToPage(nextPage)
+      return
+    }
+  }
 
   private _makeArrayUnique<T>(array: T[]) {
     return [...new Set(array)]
   }
 
-
   async setJobsDisplayed() {
-    this.jobsToBeDisplayed = signal(await lastValueFrom(this._dataStore.data$))
-    this.allJobs = this.jobsToBeDisplayed()
+    const initialVals = await lastValueFrom(this._dataStore.data$)
+    this.jobsToBeDisplayed = signal(initialVals);
+    this.currentAllJobs = signal(initialVals)
+    this.allJobs = this.currentAllJobs()
+    this.loadData(this.currentAllJobs());
   }
 
   reset() {
-    this.jobsToBeDisplayed.set(this.allJobs)
+    this.loadData(this.allJobs)
   }
 
   doSearch(filterString: string) {
+    this.currentPage.set(1)
 
     if (!filterString.length) {
       this.reset()
       return;
     }
 
-    const currentJobsDisplayed = this.jobsToBeDisplayed()
+    const currentJobsDisplayed = this.currentAllJobs()
     const filteredJobs = currentJobsDisplayed.filter((job) => {
       // Convert all the properties to lowercase for case-insensitive matching
       const lowerFilter = filterString.toLowerCase();
@@ -92,30 +138,34 @@ export class JobsService {
       );
     });
 
-    this.jobsToBeDisplayed.set(filteredJobs)
+     this.loadData(filteredJobs)
   }
 
   filterBy(keyword: string, filter: 'Title' | 'Location' | 'Company' | 'Job Type') {
+    this.currentPage.set(1)
 
+    let currentJobs =  this.currentAllJobs()
     if (filter === 'Title') {
       this.currentFilter.set({ ...this.currentFilter(), title: keyword });
-      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.title.includes(keyword)))
+       this.currentAllJobs.set(currentJobs.filter(j => j.title.includes(keyword)))
     } else if (filter === 'Location') {
       this.currentFilter.set({ ...this.currentFilter(), location: keyword });
-      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.location.includes(keyword)))
+        this.currentAllJobs.set(currentJobs.filter(j => j.location.includes(keyword)))
     } else if (filter === 'Company') {
       this.currentFilter.set({ ...this.currentFilter(), company: keyword });
-      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.company.includes(keyword)))
+        this.currentAllJobs.set(currentJobs.filter(j => j.company.includes(keyword)))
     } else if (filter === 'Job Type') {
       this.currentFilter.set({ ...this.currentFilter(), jobType: keyword as any });
-      this.jobsToBeDisplayed.set(this.jobsToBeDisplayed().filter(j => j.jobType.includes(keyword)))
+        this.currentAllJobs.set(currentJobs.filter(j => j.jobType.includes(keyword)))
     } else {
       this.currentFilter.set(this.defaultFilter)
     }
+
+    this.loadData(this.currentAllJobs())
   }
 
   resetFilterType(filter: 'Title' | 'Location' | 'Company' | 'Job Type') {
-    
+    this.currentPage.set(1)
     if (filter === 'Title') {
       this.currentFilter.set({ ...this.currentFilter(), title: "" });
     } else if (filter === 'Location') {
@@ -145,7 +195,9 @@ export class JobsService {
 
     }
 
-    this.jobsToBeDisplayed.set(currentItems);
+    this.currentAllJobs.set(currentItems)
+
+    this.loadData(currentItems);
 
   }
 
