@@ -1,19 +1,24 @@
 <div class="card p-2 mt-3 d-flex justify-content-between">
   <span>
-    {{job.title}}
+    <strong>Position: </strong> {{job.title}}
   </span>
 
   <span>
-    {{job.company}}
+    <strong>Company: </strong> {{job.company}}
   </span>
 
   <span>
-    {{job.location}}
+    <strong>Location: </strong> {{job.location}}
   </span>
 
   <span>
-    {{job.description}}
+    <strong>Date Posted: </strong> {{job.datePosted}}
   </span>
+
+  <span>
+    <strong>Job Type: </strong> {{job.jobType}}
+  </span>
+
 
   <div class="d-flex justify-content-between">
     <button type="button" class="mt-2 btn btn-outline-primary">View Job Details</button>
