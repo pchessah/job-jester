@@ -6,7 +6,11 @@ const routes: Routes = [
     path: 'job-listing',
     loadComponent: () => import('./pages/job-listings/job-listings.component').then((m) => m.JobListingsComponent),
   },
-  { path: '',   redirectTo: '/job-listing', pathMatch: 'full' }
+  {
+    path: 'landing',
+    loadComponent: () => import('./pages/landing/landing.component').then((m) => m.LandingComponent),
+  },
+  { path: '',   redirectTo: '/landing', pathMatch: 'full' }
 ];
 
 @NgModule({
